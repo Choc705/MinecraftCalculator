@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Material Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Press Start 2P', monospace;
+            background-color: #1C1C1C;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 31px, #111 31px, #111 32px),
+                repeating-linear-gradient(90deg, transparent, transparent 31px, #111 31px, #111 32px);
+            background-size: 32px 32px;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 18px;
+            color: #5D8A2C;
+            text-shadow: 3px 3px #2a3e14, -1px -1px #2a3e14;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .subtitle {
+            font-size: 7px;
+            color: #828282;
+            margin-bottom: 32px;
+            letter-spacing: 1px;
+        }
+
+        .panel {
+            background-color: #3C3C3C;
+            border: 4px solid #888;
+            border-right-color: #222;
+            border-bottom-color: #222;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-size: 8px;
+            color: #aaa;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        select, input[type="number"] {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            padding: 8px;
+            background-color: #1C1C1C;
+            color: #e0e0e0;
+            border: 2px solid #555;
+            border-right-color: #aaa;
+            border-bottom-color: #aaa;
+            outline: none;
+            flex: 1;
+        }
+
+        input[type="number"] {
+            width: 70px;
+            flex: 0 0 70px;
+        }
+
+        .btn {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            padding: 8px 12px;
+            cursor: pointer;
+            border: 3px solid;
+            border-top-color: #ccc;
+            border-left-color: #ccc;
+            border-right-color: #444;
+            border-bottom-color: #444;
+            transition: filter 0.05s;
+            white-space: nowrap;
+        }
+
+        .btn:active {
+            border-top-color: #444;
+            border-left-color: #444;
+            border-right-color: #ccc;
+            border-bottom-color: #ccc;
+            filter: brightness(0.9);
+        }
+
+        .btn-stone {
+            background-color: #828282;
+            color: #fff;
+            text-shadow: 1px 1px #333;
+        }
+
+        .btn-green {
+            background-color: #5D8A2C;
+            color: #fff;
+            text-shadow: 1px 1px #2a3e14;
+        }
+
+        .btn-red {
+            background-color: #8B2222;
+            color: #fff;
+            text-shadow: 1px 1px #3e0e0e;
+        }
+
+        #add-btn { margin-top: 8px; }
+        #calc-btn { margin-top: 16px; width: 100%; padding: 14px; font-size: 9px; }
+
+        .result-item {
+            background-color: #1C1C1C;
+            border: 3px solid #555;
+            border-right-color: #aaa;
+            border-bottom-color: #aaa;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .material-name {
+            color: #5D8A2C;
+            font-size: 8px;
+            text-transform: capitalize;
+            flex: 1;
+        }
+
+        .material-amount {
+            font-size: 7px;
+            color: #FFD700;
+            text-align: right;
+        }
+
+        .material-stacks {
+            font-size: 6px;
+            color: #828282;
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        #results { margin-top: 8px; }
+
+        .results-title {
+            font-size: 8px;
+            color: #aaa;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Minecraft<br>Material Calculator</h1>
+        <p class="subtitle">// calculate raw materials from finished items</p>
+
+        <div class="panel">
+            <div class="panel-title">Shopping List</div>
+            <div id="item-list">
+                <div class="row">
+                    <select name="item">
+                        {% for item in recipes %}
+                        <option value="{{ item }}">{{ item.replace("_", " ").title() }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="number" name="quantity" value="1" min="1">
+                    <button class="btn btn-red" onclick="removeRow(this)">✕</button>
+                </div>
+            </div>
+            <button class="btn btn-stone" id="add-btn" onclick="addRow()">+ Add Item</button>
+            <button class="btn btn-green" id="calc-btn" onclick="calculate()">⛏ Calculate</button>
+        </div>
+
+        <div class="panel hidden" id="results-panel">
+            <div class="results-title">Raw Materials Needed</div>
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        function addRow() {
+            const list = document.getElementById("item-list");
+            const first = list.querySelector(".row");
+            const newRow = first.cloneNode(true);
+            newRow.querySelector("input").value = 1;
+            list.appendChild(newRow);
+        }
+
+        function removeRow(btn) {
+            const list = document.getElementById("item-list");
+            if (list.querySelectorAll(".row").length > 1) {
+                btn.parentElement.remove();
+            }
+        }
+
+        async function calculate() {
+            const rows = document.querySelectorAll("#item-list .row");
+            const items = [];
+            rows.forEach(row => {
+                const item = row.querySelector("select").value;
+                const quantity = parseInt(row.querySelector("input").value);
+                if (quantity > 0) items.push({ item, quantity });
+            });
+
+            const response = await fetch("/calculate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ items })
+            });
+
+            const results = await response.json();
+            const div = document.getElementById("results");
+            const panel = document.getElementById("results-panel");
+
+            div.innerHTML = "";
+            results.forEach(r => {
+                div.innerHTML += `
+                    <div class="result-item">
+                        <span class="material-name">${r.material.replace(/_/g, " ")}</span>
+                        <div>
+                            <div class="material-amount">${r.amount} items</div>
+                            <div class="material-stacks">${r.formatted}</div>
+                        </div>
+                    </div>`;
+            });
+
+            panel.classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>
