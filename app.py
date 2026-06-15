@@ -6,7 +6,15 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     current_recipes = load_recipes()
-    return render_template("index.html", recipes=current_recipes)
+    
+    raw_materials = set()
+    for item_data in current_recipes.values():
+        for recipe in item_data["recipes"]:
+            for ingredient in recipe:
+                if ingredient != "output" and ingredient not in current_recipes:
+                    raw_materials.add(ingredient)
+    
+    return render_template("index.html", recipes=sorted(current_recipes), raw_materials=sorted(raw_materials))
 
 @app.route("/get_choices", methods=["POST"])
 def get_choices():
@@ -45,8 +53,7 @@ def calculate():
     for entry in data["items"]:
         item = entry["item"]
         quantity = int(entry["quantity"])
-        if item in current_recipes:
-            mat_list[item] = mat_list.get(item, 0) + quantity
+        mat_list[item] = mat_list.get(item, 0) + quantity
 
     choices = {k: int(v) for k, v in data.get("choices", {}).items()}
     materials = calculate_multiple(mat_list, choices)

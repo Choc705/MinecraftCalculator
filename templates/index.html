@@ -219,9 +219,16 @@
             <div id="item-list">
                 <div class="row">
                     <select name="item">
-                        {% for item in recipes %}
-                        <option value="{{ item }}">{{ item.replace("_", " ").title() }}</option>
-                        {% endfor %}
+                        <optgroup label="Craftable Items">
+                            {% for item in recipes %}
+                            <option value="{{ item }}">{{ item.replace("_", " ").title() }}</option>
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Raw Materials">
+                            {% for material in raw_materials %}
+                            <option value="{{ material }}">{{ material.replace("_", " ").title() }}</option>
+                            {% endfor %}
+                        </optgroup>
                     </select>
                     <input type="number" name="quantity" value="1" min="1">
                     <button class="btn btn-danger" onclick="removeRow(this)">X</button>
