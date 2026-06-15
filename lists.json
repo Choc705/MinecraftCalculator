@@ -1,1 +1,54 @@
-{}
+{
+  "Wizard Tower": {
+    "items": [
+      {
+        "item": "stone",
+        "quantity": 667
+      },
+      {
+        "item": "spruce_log",
+        "quantity": 234
+      },
+      {
+        "item": "clay_block",
+        "quantity": 232
+      },
+      {
+        "item": "dye",
+        "quantity": 37
+      },
+      {
+        "item": "dark_oak_log",
+        "quantity": 149
+      },
+      {
+        "item": "crimson_stem",
+        "quantity": 57
+      },
+      {
+        "item": "sand",
+        "quantity": 24
+      },
+      {
+        "item": "any_log",
+        "quantity": 8
+      },
+      {
+        "item": "oak_log",
+        "quantity": 34
+      },
+      {
+        "item": "iron_ingot",
+        "quantity": 43
+      },
+      {
+        "item": "torch",
+        "quantity": 39
+      },
+      {
+        "item": "cherry_log",
+        "quantity": 15
+      }
+    ]
+  }
+}

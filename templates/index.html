@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minecraft Material Calculator</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='redstoneIcon.png') }}">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -338,16 +339,6 @@
             <div class="results-title">Raw Materials Needed</div>
             <div id="results"></div>
         </div>
-        <div class="panel">
-            <button class="btn btn-ghost" style="width: 100%; text-align: left; padding: 4px 0; font-size: 14px; font-weight: 600; background: none; border: none; cursor: pointer; color: #1a1a1a;" onclick="toggleRecipeEditor()">
-                <span id="recipe-editor-toggle-label">+ View / Edit Recipes</span>
-            </button>
-
-            <div id="recipe-editor" class="hidden">
-                <div style="border-top: 1px solid #e5e5e5; margin: 16px 0;"></div>
-                <div id="recipe-editor-list"></div>
-            </div>
-        </div>
 
         <div class="panel">
             <button class="btn btn-ghost" style="width: 100%; text-align: left; padding: 4px 0; font-size: 14px; font-weight: 600; background: none; border: none; cursor: pointer; color: #1a1a1a;" onclick="toggleSavedLists()">
@@ -357,6 +348,17 @@
             <div id="saved-lists-panel" class="hidden">
                 <div style="border-top: 1px solid #e5e5e5; margin: 16px 0;"></div>
                 <div id="saved-lists-content"></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <button class="btn btn-ghost" style="width: 100%; text-align: left; padding: 4px 0; font-size: 14px; font-weight: 600; background: none; border: none; cursor: pointer; color: #1a1a1a;" onclick="toggleRecipeEditor()">
+                <span id="recipe-editor-toggle-label">+ View / Edit Recipes</span>
+            </button>
+
+            <div id="recipe-editor" class="hidden">
+                <div style="border-top: 1px solid #e5e5e5; margin: 16px 0;"></div>
+                <div id="recipe-editor-list"></div>
             </div>
         </div>
 
