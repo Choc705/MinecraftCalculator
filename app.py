@@ -25,5 +25,28 @@ def calculate():
     
     return jsonify(results)
 
+@app.route("/add_recipe", methods=["POST"])
+def add_recipe():
+    from minecraft_calc import save_recipes
+    data = request.get_json()
+
+    item_name = data["item_name"].strip().lower().replace(" ", "_")
+    output = int(data["output"])
+    ingredients = data["ingredients"]
+
+    recipe = {"output": output}
+    for ingredient in ingredients:
+        name = ingredient["name"].strip().lower().replace(" ", "_")
+        amount = int(ingredient["amount"])
+        recipe[name] = amount
+    
+    from minecraft_calc import recipes
+    recipes[item_name] = recipe
+    save_recipes(recipes)
+
+    return jsonify({"success": True, "item": item_name})
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)

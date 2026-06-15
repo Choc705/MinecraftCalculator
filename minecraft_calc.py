@@ -1,15 +1,31 @@
-from statistics import quantiles
+#from statistics import quantiles
+import json
+import os
 
+RECIPES_FILE = "recipes.json"
 
-recipes = {
-    "oak_planks": {"oak_log": 1, "output": 4},
-    "oak_trapdoor": {"oak_planks": 6, "output": 2},
-    "sticks": {"oak_planks": 2, "output": 4},
-    "oak_fence": {"sticks": 2, "oak_planks": 4, "output": 3},
-    "oak_fence_gate": {"sticks": 4, "oak_planks": 2, "output": 1},
-    "oak_stairs": {"oak_planks": 6, "output": 4},
-    "oak_slab": {"oak_planks": 3, "output": 6}
-}
+def load_recipes():
+    if not os.path.exists(RECIPES_FILE):
+        return {}
+
+    with open(RECIPES_FILE, "r") as f:
+        return json.load(f)
+    
+def save_recipes(recipes):
+    with open(RECIPES_FILE, "w") as f:
+        json.dump(recipes, f, indent=2)
+
+recipes = load_recipes()
+
+# recipes = {
+#     "oak_planks": {"oak_log": 1, "output": 4},
+#     "oak_trapdoor": {"oak_planks": 6, "output": 2},
+#     "sticks": {"oak_planks": 2, "output": 4},
+#     "oak_fence": {"sticks": 2, "oak_planks": 4, "output": 3},
+#     "oak_fence_gate": {"sticks": 4, "oak_planks": 2, "output": 1},
+#     "oak_stairs": {"oak_planks": 6, "output": 4},
+#     "oak_slab": {"oak_planks": 3, "output": 6}
+# }
 
 def calculate_materials(item, quantity_needed):
     if item not in recipes:
