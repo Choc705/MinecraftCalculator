@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from minecraft_calc import recipes, calculate_materials, format_stacks, calculate_multiple, save_recipes, load_recipes
+from minecraft_calc import recipes, calculate_materials, format_stacks, calculate_multiple, save_recipes, load_recipes, load_lists, save_lists
 
 app = Flask(__name__)
 
@@ -149,6 +149,37 @@ def edit_recipe():
 @app.route("/get_all_recipes")
 def get_all_recipes():
     return jsonify(load_recipes())
+
+@app.route("/get_all_lists")
+def get_all_lists():
+    return jsonify(load_lists())
+
+@app.route("/save_list", methods=["POST"])
+def save_list():
+    data = request.get_json()
+    name = data["name"].strip()
+    items = data["items"]
+
+    if not name:
+        return jsonify({"success": False, "error": "No name provided"})
+
+    current_lists = load_lists()
+    current_lists[name] = {"items": items}
+    save_lists(current_lists)
+
+    return jsonify({"success": True})
+
+@app.route("/delete_list", methods=["POST"])
+def delete_list():
+    data = request.get_json()
+    name = data["name"]
+
+    current_lists = load_lists()
+    if name in current_lists:
+        del current_lists[name]
+        save_lists(current_lists)
+
+    return jsonify({"success": True})
 
 if __name__ == "__main__":
     app.run(debug=True)

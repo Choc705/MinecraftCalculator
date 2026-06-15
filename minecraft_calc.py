@@ -15,6 +15,21 @@ def save_recipes(recipes):
 
 recipes = load_recipes()
 
+LISTS_FILE = "lists.json"
+
+def load_lists():
+    if not os.path.exists(LISTS_FILE):
+        return {}
+    with open(LISTS_FILE, "r") as f:
+        content = f.read().strip()
+        if not content:
+            return {}
+        return json.loads(content)
+
+def save_lists(lists):
+    with open(LISTS_FILE, "w") as f:
+        json.dump(lists, f, indent=2)
+
 def calculate_materials(item, quantity_needed, choices={}):
     if item not in recipes:
         return {item: quantity_needed}

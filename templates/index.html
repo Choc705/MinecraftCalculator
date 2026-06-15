@@ -86,7 +86,7 @@
             font-family: Arial, sans-serif;
             font-size: 13px;
             font-weight: 500;
-            padding: 9px 16px;
+            padding: 12px 16px;
             cursor: pointer;
             border-radius: 8px;
             border: none;
@@ -120,11 +120,8 @@
         #add-btn { margin-top: 8px; }
 
         #calc-btn {
-            margin-top: 16px;
-            width: 100%;
-            padding: 12px;
+            flex: 1;
             font-size: 14px;
-            border-radius: 8px;
         }
 
         .result-item {
@@ -258,6 +255,44 @@
             padding: 5px 10px;
             border-radius: 6px;
         }
+
+        .list-card {
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            background-color: #fafafa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .list-card-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            flex: 1;
+        }
+
+        .list-card-items {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .list-card-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .empty-state {
+            font-size: 13px;
+            color: #aaa;
+            text-align: center;
+            padding: 20px 0;
+        }
 </style>
 </head>
 <body>
@@ -286,7 +321,10 @@
                 </div>
             </div>
             <button class="btn btn-ghost" id="add-btn" onclick="addRow()">+ Add Item</button>
-            <button class="btn btn-primary" id="calc-btn" onclick="startCalculate()">Calculate</button>
+            <div style="display: flex; gap: 8px; margin-top: 16px;">
+                <button class="btn btn-primary" id="calc-btn" onclick="startCalculate()">Calculate</button>
+                <button class="btn btn-ghost" style="white-space: nowrap;" onclick="saveCurrentList()">Save List</button>
+            </div>
         </div>
 
         <div class="panel hidden" id="choices-panel">
@@ -310,6 +348,18 @@
                 <div id="recipe-editor-list"></div>
             </div>
         </div>
+
+        <div class="panel">
+            <button class="btn btn-ghost" style="width: 100%; text-align: left; padding: 4px 0; font-size: 14px; font-weight: 600; background: none; border: none; cursor: pointer; color: #1a1a1a;" onclick="toggleSavedLists()">
+                <span id="saved-lists-toggle-label">+ Saved Lists</span>
+            </button>
+
+            <div id="saved-lists-panel" class="hidden">
+                <div style="border-top: 1px solid #e5e5e5; margin: 16px 0;"></div>
+                <div id="saved-lists-content"></div>
+            </div>
+        </div>
+
         <div class="panel">
             <div class="panel-title">Add New Recipe</div>
 
@@ -627,6 +677,139 @@
             });
 
             await loadRecipeEditor();
+        }
+
+        async function saveCurrentList() {
+            const rows = document.querySelectorAll("#item-list .row");
+            const items = [];
+            rows.forEach(row => {
+                const item = row.querySelector("select").value;
+                const quantity = parseInt(row.querySelector("input").value);
+                if (quantity > 0) items.push({ item, quantity });
+            });
+
+            if (items.length === 0) {
+                alert("Your shopping list is empty!");
+                return;
+            }
+
+            const name = prompt("Name this list:");
+            if (!name || !name.trim()) return;
+
+            const response = await fetch("/save_list", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: name.trim(), items })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert(`"${name}" saved!`);
+                if (!document.getElementById("saved-lists-panel").classList.contains("hidden")) {
+                    await loadSavedLists();
+                }
+            }
+        }
+
+        async function toggleSavedLists() {
+            const panel = document.getElementById("saved-lists-panel");
+            const label = document.getElementById("saved-lists-toggle-label");
+
+            if (panel.classList.contains("hidden")) {
+                await loadSavedLists();
+                panel.classList.remove("hidden");
+                label.textContent = "- Saved Lists";
+            } else {
+                panel.classList.add("hidden");
+                label.textContent = "+ Saved Lists";
+            }
+        }
+
+        async function loadSavedLists() {
+            const response = await fetch("/get_all_lists");
+            const lists = await response.json();
+            const content = document.getElementById("saved-lists-content");
+            content.innerHTML = "";
+
+            if (Object.keys(lists).length === 0) {
+                content.innerHTML = '<div class="empty-state">No saved lists yet</div>';
+                return;
+            }
+
+            for (const [name, data] of Object.entries(lists)) {
+                const summary = data.items.map(i => `${i.quantity}x ${i.item.replace(/_/g, " ")}`).join(", ");
+                const card = document.createElement("div");
+                card.className = "list-card";
+                card.innerHTML = `
+                    <div style="flex: 1; min-width: 0;">
+                        <div class="list-card-name">${name}</div>
+                        <div class="list-card-items">${summary}</div>
+                    </div>
+                    <div class="list-card-actions">
+                        <button class="btn btn-ghost btn-sm" onclick="loadList('${name}')">Load</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteList('${name}')">Delete</button>
+                    </div>`;
+                content.appendChild(card);
+            }
+        }
+
+        async function loadList(name) {
+            const response = await fetch("/get_all_lists");
+            const lists = await response.json();
+            const list = lists[name];
+
+            if (!list) return;
+
+            const choices = {};
+            const calcResponse = await fetch("/calculate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ items: list.items, choices })
+            });
+
+            const results = await calcResponse.json();
+            const div = document.getElementById("results");
+            const panel = document.getElementById("results-panel");
+
+            div.innerHTML = "";
+            results.forEach(r => {
+                div.innerHTML += `
+                    <div class="result-item">
+                        <span class="material-name">${r.material.replace(/_/g, " ")}</span>
+                        <div>
+                            <div class="material-amount">${r.amount} items</div>
+                            <div class="material-stacks">${r.formatted}</div>
+                        </div>
+                    </div>`;
+            });
+
+            panel.classList.remove("hidden");
+            panel.scrollIntoView({ behavior: "smooth" });
+        }
+
+        function createBlankRow() {
+            const row = document.createElement("div");
+            row.className = "row";
+            row.innerHTML = `
+                <select name="item">
+                    ${Array.from(document.querySelectorAll("#item-list select")[0].options)
+                        .map(o => `<option value="${o.value}">${o.text}</option>`).join("")}
+                </select>
+                <input type="number" name="quantity" value="1" min="1">
+                <button class="btn btn-danger" onclick="removeRow(this)">✕</button>`;
+            return row;
+        }
+
+        async function deleteList(name) {
+            if (!confirm(`Delete "${name}"?`)) return;
+
+            await fetch("/delete_list", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name })
+            });
+
+            await loadSavedLists();
         }
     </script>
 </body>

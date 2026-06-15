@@ -417,8 +417,8 @@
     "recipes": [
       {
         "output": 1,
-        "oak_planks": 6,
-        "oak_slab": 2
+        "any_planks": 6,
+        "any_slab": 2
       }
     ]
   },
@@ -637,6 +637,40 @@
         "output": 1,
         "any_planks": 6,
         "book": 3
+      }
+    ]
+  },
+  "painting": {
+    "recipes": [
+      {
+        "output": 1,
+        "stick": 8,
+        "wool": 1
+      }
+    ]
+  },
+  "banner": {
+    "recipes": [
+      {
+        "output": 1,
+        "stick": 1,
+        "wool": 6
+      }
+    ]
+  },
+  "crafting_table": {
+    "recipes": [
+      {
+        "output": 1,
+        "any_planks": 4
+      }
+    ]
+  },
+  "any_slab": {
+    "recipes": [
+      {
+        "output": 6,
+        "any_planks": 3
       }
     ]
   }
