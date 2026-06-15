@@ -1,33 +1,68 @@
 from flask import Flask, render_template, request, jsonify
-from minecraft_calc import recipes, calculate_materials, format_stacks, calculate_multiple
+from minecraft_calc import recipes, calculate_materials, format_stacks, calculate_multiple, save_recipes, load_recipes
 
 app = Flask(__name__)
+
 @app.route("/")
 def index():
-    return render_template("index.html", recipes=recipes)
+    current_recipes = load_recipes()
+    return render_template("index.html", recipes=current_recipes)
+
+@app.route("/get_choices", methods=["POST"])
+def get_choices():
+    data = request.get_json()
+    current_recipes = load_recipes()
+    
+    needed_choices = {}
+    
+    for entry in data["items"]:
+        item = entry["item"]
+        if item in current_recipes:
+            item_recipes = current_recipes[item]["recipes"]
+            if len(item_recipes) > 1:
+                needed_choices[item] = {
+                    "options": [
+                        {
+                            "index": i,
+                            "ingredients": {k: v for k, v in r.items() if k != "output"},
+                            "output": r["output"]
+                        }
+                        for i, r in enumerate(item_recipes)
+                    ]
+                }
+    
+    return jsonify(needed_choices)
 
 @app.route("/calculate", methods=["POST"])
 def calculate():
     data = request.get_json()
-    mat_list = {}
+    current_recipes = load_recipes()
+    
+    import minecraft_calc
+    minecraft_calc.recipes = current_recipes
 
+    mat_list = {}
     for entry in data["items"]:
         item = entry["item"]
         quantity = int(entry["quantity"])
-        if item in recipes:
+        if item in current_recipes:
             mat_list[item] = mat_list.get(item, 0) + quantity
-        
-    materials = calculate_multiple(mat_list)
+
+    choices = {k: int(v) for k, v in data.get("choices", {}).items()}
+    materials = calculate_multiple(mat_list, choices)
 
     results = []
     for material, amount in materials.items():
-        results.append({"material": material, "amount": int(amount), "formatted": format_stacks(amount)})
-    
+        results.append({
+            "material": material,
+            "amount": int(amount),
+            "formatted": format_stacks(amount)
+        })
+
     return jsonify(results)
 
 @app.route("/add_recipe", methods=["POST"])
 def add_recipe():
-    from minecraft_calc import save_recipes
     data = request.get_json()
 
     item_name = data["item_name"].strip().lower().replace(" ", "_")
@@ -39,14 +74,20 @@ def add_recipe():
         name = ingredient["name"].strip().lower().replace(" ", "_")
         amount = int(ingredient["amount"])
         recipe[name] = amount
-    
-    from minecraft_calc import recipes
-    recipes[item_name] = recipe
-    save_recipes(recipes)
+
+    current_recipes = load_recipes()
+
+    if item_name in current_recipes:
+        current_recipes[item_name]["recipes"].append(recipe)
+    else:
+        current_recipes[item_name] = {"recipes": [recipe]}
+
+    save_recipes(current_recipes)
+
+    import minecraft_calc
+    minecraft_calc.recipes = current_recipes
 
     return jsonify({"success": True, "item": item_name})
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)

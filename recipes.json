@@ -1,26 +1,62 @@
 {
-  "spruce_planks": {
-    "output": 4,
-    "spruce_log": 1
-  },
   "oak_planks": {
-    "output": 4,
-    "oak_log": 1
-  },
-  "dark_oak_planks": {
-    "output": 4,
-    "dark_oak_log": 1
+    "recipes": [
+      {
+        "oak_log": 1,
+        "output": 4
+      }
+    ]
   },
   "oak_trapdoor": {
-    "output": 2,
-    "oak_planks": 6
+    "recipes": [
+      {
+        "oak_planks": 6,
+        "output": 2
+      }
+    ]
+  },
+  "stick": {
+    "recipes": [
+      {
+        "oak_planks": 2,
+        "output": 4
+      },
+      {
+        "spruce_planks": 2,
+        "output": 4
+      },
+      {
+        "birch_planks": 2,
+        "output": 4
+      },
+      {
+        "jungle_planks": 2,
+        "output": 4
+      },
+      {
+        "acacia_planks": 2,
+        "output": 4
+      },
+      {
+        "dark_oak_planks": 2,
+        "output": 4
+      }
+    ]
   },
   "oak_stairs": {
-    "output": 4,
-    "oak_planks": 6
+    "recipes": [
+      {
+        "output": 4,
+        "oak_planks": 6
+      }
+    ]
   },
   "oak_slab": {
-    "output": 6,
-    "oak_planks": 3
+    "recipes": [
+      {
+        "output": 6,
+        "oak_planks": 3
+      }
+    ]
   }
 }
