@@ -40,6 +40,10 @@
       {
         "dark_oak_planks": 2,
         "output": 4
+      },
+      {
+        "output": 4,
+        "crimson_planks": 2
       }
     ]
   },
@@ -113,6 +117,266 @@
       {
         "output": 1,
         "oak_planks": 2,
+        "stick": 4
+      }
+    ]
+  },
+  "acacia_fence": {
+    "recipes": [
+      {
+        "output": 3,
+        "acacia_planks": 4,
+        "stick": 2
+      }
+    ]
+  },
+  "acacia_fence_gate": {
+    "recipes": [
+      {
+        "output": 1,
+        "acacia_planks": 2,
+        "stick": 4
+      }
+    ]
+  },
+  "acacia_slab": {
+    "recipes": [
+      {
+        "output": 6,
+        "acacia_planks": 3
+      }
+    ]
+  },
+  "acacia_stairs": {
+    "recipes": [
+      {
+        "output": 4,
+        "acacia_planks": 6
+      }
+    ]
+  },
+  "acacia_trapdoor": {
+    "recipes": [
+      {
+        "output": 2,
+        "acacia_planks": 6
+      }
+    ]
+  },
+  "birch_slab": {
+    "recipes": [
+      {
+        "output": 6,
+        "birch_planks": 3
+      }
+    ]
+  },
+  "birch_stairs": {
+    "recipes": [
+      {
+        "output": 4,
+        "birch_planks": 6
+      }
+    ]
+  },
+  "birch_fence": {
+    "recipes": [
+      {
+        "output": 3,
+        "birch_planks": 4,
+        "stick": 2
+      }
+    ]
+  },
+  "birch_fence_gate": {
+    "recipes": [
+      {
+        "output": 1,
+        "birch_planks": 2,
+        "stick": 4
+      }
+    ]
+  },
+  "birch_trapdoor": {
+    "recipes": [
+      {
+        "output": 2,
+        "birch_planks": 6
+      }
+    ]
+  },
+  "dark_oak_slab": {
+    "recipes": [
+      {
+        "output": 6,
+        "dark_oak_planks": 3
+      }
+    ]
+  },
+  "dark_oak_stairs": {
+    "recipes": [
+      {
+        "output": 4,
+        "dark_oak_planks": 6
+      }
+    ]
+  },
+  "dark_oak_trapdoor": {
+    "recipes": [
+      {
+        "output": 2,
+        "dark_oak_planks": 6
+      }
+    ]
+  },
+  "dark_oak_fence": {
+    "recipes": [
+      {
+        "output": 3,
+        "dark_oak_planks": 4,
+        "stick": 2
+      }
+    ]
+  },
+  "dark_oak_fence_gate": {
+    "recipes": [
+      {
+        "output": 1,
+        "dark_oak_planks": 2,
+        "stick": 4
+      }
+    ]
+  },
+  "jungle_slab": {
+    "recipes": [
+      {
+        "output": 6,
+        "jungle_planks": 3
+      }
+    ]
+  },
+  "jungle_stairs": {
+    "recipes": [
+      {
+        "output": 4,
+        "jungle_planks": 6
+      }
+    ]
+  },
+  "jungle_trapdoor": {
+    "recipes": [
+      {
+        "output": 2,
+        "jungle_planks": 6
+      }
+    ]
+  },
+  "jungle_fence": {
+    "recipes": [
+      {
+        "output": 3,
+        "jungle_planks": 4,
+        "stick": 2
+      }
+    ]
+  },
+  "jungle_fence_gate": {
+    "recipes": [
+      {
+        "output": 1,
+        "jungle_planks": 2,
+        "stick": 4
+      }
+    ]
+  },
+  "spruce_slab": {
+    "recipes": [
+      {
+        "output": 6,
+        "spruce_planks": 3
+      }
+    ]
+  },
+  "spruce_stairs": {
+    "recipes": [
+      {
+        "output": 4,
+        "spruce_planks": 6
+      }
+    ]
+  },
+  "spruce_trapdoor": {
+    "recipes": [
+      {
+        "output": 2,
+        "spruce_planks": 6
+      }
+    ]
+  },
+  "spruce_fence": {
+    "recipes": [
+      {
+        "output": 3,
+        "spruce_planks": 4,
+        "stick": 2
+      }
+    ]
+  },
+  "spruce_fence_gate": {
+    "recipes": [
+      {
+        "output": 1,
+        "spruce_planks": 2,
+        "stick": 4
+      }
+    ]
+  },
+  "crimson_planks": {
+    "recipes": [
+      {
+        "output": 4,
+        "crimson_stem": 1
+      }
+    ]
+  },
+  "crimson_slab": {
+    "recipes": [
+      {
+        "output": 6,
+        "crimson_planks": 3
+      }
+    ]
+  },
+  "crimson_stairs": {
+    "recipes": [
+      {
+        "output": 4,
+        "crimson_planks": 6
+      }
+    ]
+  },
+  "crimson_trapdoor": {
+    "recipes": [
+      {
+        "output": 2,
+        "crimson_planks": 6
+      }
+    ]
+  },
+  "crimson_fence": {
+    "recipes": [
+      {
+        "output": 3,
+        "crimson_planks": 4,
+        "stick": 2
+      }
+    ]
+  },
+  "crimson_fence_gate": {
+    "recipes": [
+      {
+        "output": 1,
+        "crimson_planks": 2,
         "stick": 4
       }
     ]

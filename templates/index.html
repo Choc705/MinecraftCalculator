@@ -148,17 +148,17 @@
         }
 
         .material-amount {
-            font-size: 14px;
-            font-weight: 600;
-            color: #e05555;
+            font-size: 12px;
+            color: #888;
             text-align: right;
         }
 
         .material-stacks {
-            font-size: 12px;
-            color: #888;
-            text-align: right;
             margin-top: 2px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e05555;
+            text-align: right;
         }
 
         .choice-item { margin-bottom: 20px; }
@@ -324,7 +324,7 @@
             for (const [item, data] of Object.entries(neededChoices)) {
                 const div = document.createElement("div");
                 div.className = "choice-item";
-                div.innerHTML = `<div class="choice-label">⛏ ${item.replace(/_/g, " ")}</div>`;
+                div.innerHTML = `<div class="choice-label">${item.replace(/_/g, " ")}</div>`;
 
                 data.options.forEach((opt, i) => {
                     const ingredients = Object.entries(opt.ingredients)
