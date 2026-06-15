@@ -96,5 +96,59 @@ def add_recipe():
 
     return jsonify({"success": True, "item": item_name})
 
+@app.route("/delete_recipe", methods=["POST"])
+def delete_recipe():
+    data = request.get_json()
+    item_name = data["item_name"]
+    variant_index = data.get("variant_index", None)
+
+    current_recipes = load_recipes()
+
+    if item_name not in current_recipes:
+        return jsonify({"success": False, "error": "Recipe not found"})
+
+    if variant_index is not None and len(current_recipes[item_name]["recipes"]) > 1:
+        current_recipes[item_name]["recipes"].pop(int(variant_index))
+    else:
+        del current_recipes[item_name]
+
+    save_recipes(current_recipes)
+
+    import minecraft_calc
+    minecraft_calc.recipes = current_recipes
+
+    return jsonify({"success": True})
+
+@app.route("/edit_recipe", methods=["POST"])
+def edit_recipe():
+    data = request.get_json()
+    item_name = data["item_name"]
+    variant_index = int(data["variant_index"])
+    output = int(data["output"])
+    ingredients = data["ingredients"]
+
+    current_recipes = load_recipes()
+
+    if item_name not in current_recipes:
+        return jsonify({"success": False, "error": "Recipe not found"})
+
+    new_recipe = {"output": output}
+    for ingredient in ingredients:
+        name = ingredient["name"].strip().lower().replace(" ", "_")
+        amount = int(ingredient["amount"])
+        new_recipe[name] = amount
+
+    current_recipes[item_name]["recipes"][variant_index] = new_recipe
+    save_recipes(current_recipes)
+
+    import minecraft_calc
+    minecraft_calc.recipes = current_recipes
+
+    return jsonify({"success": True})
+
+@app.route("/get_all_recipes")
+def get_all_recipes():
+    return jsonify(load_recipes())
+
 if __name__ == "__main__":
     app.run(debug=True)

@@ -18,32 +18,8 @@
   "stick": {
     "recipes": [
       {
-        "oak_planks": 2,
-        "output": 4
-      },
-      {
-        "spruce_planks": 2,
-        "output": 4
-      },
-      {
-        "birch_planks": 2,
-        "output": 4
-      },
-      {
-        "jungle_planks": 2,
-        "output": 4
-      },
-      {
-        "acacia_planks": 2,
-        "output": 4
-      },
-      {
-        "dark_oak_planks": 2,
-        "output": 4
-      },
-      {
         "output": 4,
-        "crimson_planks": 2
+        "any_planks": 2
       }
     ]
   },
@@ -378,6 +354,289 @@
         "output": 1,
         "crimson_planks": 2,
         "stick": 4
+      }
+    ]
+  },
+  "oak_door": {
+    "recipes": [
+      {
+        "output": 3,
+        "oak_planks": 6
+      }
+    ]
+  },
+  "spruce_door": {
+    "recipes": [
+      {
+        "output": 3,
+        "spruce_planks": 6
+      }
+    ]
+  },
+  "dark_oak_door": {
+    "recipes": [
+      {
+        "output": 3,
+        "dark_oak_planks": 6
+      }
+    ]
+  },
+  "acacia_door": {
+    "recipes": [
+      {
+        "output": 3,
+        "acacia_planks": 6
+      }
+    ]
+  },
+  "birch_door": {
+    "recipes": [
+      {
+        "output": 3,
+        "birch_planks": 6
+      }
+    ]
+  },
+  "jungle_door": {
+    "recipes": [
+      {
+        "output": 3,
+        "jungle_planks": 6
+      }
+    ]
+  },
+  "crimson_door": {
+    "recipes": [
+      {
+        "output": 3,
+        "crimson_planks": 6
+      }
+    ]
+  },
+  "barrel": {
+    "recipes": [
+      {
+        "output": 1,
+        "oak_planks": 6,
+        "oak_slab": 2
+      }
+    ]
+  },
+  "stone_bricks": {
+    "recipes": [
+      {
+        "output": 1,
+        "stone": 1
+      }
+    ]
+  },
+  "iron_nugget": {
+    "recipes": [
+      {
+        "output": 9,
+        "iron_ingot": 1
+      }
+    ]
+  },
+  "chain": {
+    "recipes": [
+      {
+        "output": 1,
+        "iron_ingot": 1,
+        "iron_nugget": 2
+      }
+    ]
+  },
+  "lantern": {
+    "recipes": [
+      {
+        "output": 1,
+        "iron_nugget": 8,
+        "torch": 1
+      }
+    ]
+  },
+  "any_planks": {
+    "recipes": [
+      {
+        "output": 4,
+        "any_log": 1
+      }
+    ]
+  },
+  "carpet": {
+    "recipes": [
+      {
+        "output": 3,
+        "wool": 2
+      }
+    ]
+  },
+  "brick_(single)": {
+    "recipes": [
+      {
+        "output": 1,
+        "clay_(single)": 1
+      }
+    ]
+  },
+  "flower_pot": {
+    "recipes": [
+      {
+        "output": 1,
+        "brick_(single)": 3
+      }
+    ]
+  },
+  "cherry_planks": {
+    "recipes": [
+      {
+        "output": 4,
+        "cherry_log": 1
+      }
+    ]
+  },
+  "cherry_slab": {
+    "recipes": [
+      {
+        "output": 6,
+        "cherry_planks": 3
+      }
+    ]
+  },
+  "cherry_stairs": {
+    "recipes": [
+      {
+        "output": 4,
+        "cherry_planks": 6
+      }
+    ]
+  },
+  "cherry_trapdoor": {
+    "recipes": [
+      {
+        "output": 2,
+        "cherry_planks": 6
+      }
+    ]
+  },
+  "cherry_door": {
+    "recipes": [
+      {
+        "output": 3,
+        "cherry_planks": 6
+      }
+    ]
+  },
+  "cherry_fence": {
+    "recipes": [
+      {
+        "output": 3,
+        "cherry_planks": 4,
+        "stick": 2
+      }
+    ]
+  },
+  "cherry_fence_gate": {
+    "recipes": [
+      {
+        "output": 1,
+        "cherry_planks": 2,
+        "stick": 4
+      }
+    ]
+  },
+  "terracotta": {
+    "recipes": [
+      {
+        "output": 1,
+        "clay_block": 1
+      }
+    ]
+  },
+  "terracotta_(stained)": {
+    "recipes": [
+      {
+        "output": 8,
+        "terracotta": 8,
+        "dye": 1
+      }
+    ]
+  },
+  "item_frame": {
+    "recipes": [
+      {
+        "output": 1,
+        "stick": 8,
+        "leather": 1
+      }
+    ]
+  },
+  "paper": {
+    "recipes": [
+      {
+        "output": 3,
+        "sugar_cane": 3
+      }
+    ]
+  },
+  "book": {
+    "recipes": [
+      {
+        "output": 1,
+        "paper": 3,
+        "leather": 1
+      }
+    ]
+  },
+  "glass": {
+    "recipes": [
+      {
+        "output": 1,
+        "sand": 1
+      }
+    ]
+  },
+  "glass_pane": {
+    "recipes": [
+      {
+        "output": 16,
+        "glass": 6
+      }
+    ]
+  },
+  "glass_(stained)": {
+    "recipes": [
+      {
+        "output": 8,
+        "glass": 8,
+        "dye": 1
+      }
+    ]
+  },
+  "glass_pane_(stained)": {
+    "recipes": [
+      {
+        "output": 8,
+        "glass_pane": 8,
+        "dye": 1
+      }
+    ]
+  },
+  "chest": {
+    "recipes": [
+      {
+        "output": 1,
+        "any_planks": 8
+      }
+    ]
+  },
+  "bookshelves": {
+    "recipes": [
+      {
+        "output": 1,
+        "any_planks": 6,
+        "book": 3
       }
     ]
   }

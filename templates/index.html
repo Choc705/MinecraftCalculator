@@ -207,6 +207,57 @@
         .hidden { display: none; }
 
         #recipe-message { margin-top: 12px; font-size: 13px; display: none; }
+
+        .recipe-card {
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            background-color: #fafafa;
+        }
+
+        .recipe-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            text-transform: capitalize;
+            margin-bottom: 8px;
+        }
+
+        .recipe-variant {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .recipe-variant-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .recipe-edit-form {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .recipe-edit-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .btn-sm {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
 </style>
 </head>
 <body>
@@ -249,7 +300,16 @@
             <div class="results-title">Raw Materials Needed</div>
             <div id="results"></div>
         </div>
+        <div class="panel">
+            <button class="btn btn-ghost" style="width: 100%; text-align: left; padding: 4px 0; font-size: 14px; font-weight: 600; background: none; border: none; cursor: pointer; color: #1a1a1a;" onclick="toggleRecipeEditor()">
+                <span id="recipe-editor-toggle-label">+ View / Edit Recipes</span>
+            </button>
 
+            <div id="recipe-editor" class="hidden">
+                <div style="border-top: 1px solid #e5e5e5; margin: 16px 0;"></div>
+                <div id="recipe-editor-list"></div>
+            </div>
+        </div>
         <div class="panel">
             <div class="panel-title">Add New Recipe</div>
 
@@ -437,6 +497,136 @@
                 document.getElementById("new-item-name").value = "";
                 document.getElementById("new-item-output").value = 1;
             }
+        }
+
+        async function toggleRecipeEditor() {
+            const panel = document.getElementById("recipe-editor");
+            const label = document.getElementById("recipe-editor-toggle-label");
+
+            if (panel.classList.contains("hidden")) {
+                await loadRecipeEditor();
+                panel.classList.remove("hidden");
+                label.textContent = "- View / Edit Recipes";
+            } else {
+                panel.classList.add("hidden");
+                label.textContent = "+ View / Edit Recipes";
+            }
+        }
+
+        async function loadRecipeEditor() {
+            const response = await fetch("/");
+            const parser = new DOMParser();
+            const recipes = await fetch("/get_choices", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ items: [] })
+            });
+
+            const recipeResponse = await fetch("/get_all_recipes");
+            const allRecipes = await recipeResponse.json();
+
+            const list = document.getElementById("recipe-editor-list");
+            list.innerHTML = "";
+
+            for (const [itemName, itemData] of Object.entries(allRecipes)) {
+                const card = document.createElement("div");
+                card.className = "recipe-card";
+                card.id = `recipe-card-${itemName}`;
+
+                let variantsHTML = itemData.recipes.map((recipe, i) => {
+                    const ingredients = Object.entries(recipe)
+                        .filter(([k]) => k !== "output")
+                        .map(([k, v]) => `${v}x ${k.replace(/_/g, " ")}`)
+                        .join(", ");
+                    return `
+                        <div class="recipe-variant" id="recipe-variant-${itemName}-${i}">
+                            <span>${ingredients} → ${recipe.output}x ${itemName.replace(/_/g, " ")}</span>
+                            <div class="recipe-variant-actions">
+                                <button class="btn btn-ghost btn-sm" onclick="showEditForm('${itemName}', ${i})">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteRecipe('${itemName}', ${i})">Delete</button>
+                            </div>
+                        </div>
+                        <div class="recipe-edit-form hidden" id="edit-form-${itemName}-${i}">
+                            <div style="font-size: 12px; color: #888; margin-bottom: 8px;">Output amount</div>
+                            <input type="number" id="edit-output-${itemName}-${i}" value="${recipe.output}" min="1" style="width: 100%; margin-bottom: 10px; flex: none;">
+                            <div style="font-size: 12px; color: #888; margin-bottom: 8px;">Ingredients</div>
+                            <div id="edit-ingredients-${itemName}-${i}">
+                                ${Object.entries(recipe).filter(([k]) => k !== "output").map(([k, v]) => `
+                                    <div class="recipe-edit-row">
+                                        <input type="text" name="edit-ingredient-name" value="${k}">
+                                        <input type="number" name="edit-ingredient-amount" value="${v}">
+                                        <button class="btn btn-danger btn-sm" onclick="removeEditIngredient(this)">✕</button>
+                                    </div>
+                                `).join("")}
+                            </div>
+                            <button class="btn btn-ghost btn-sm" style="margin-top: 4px;" onclick="addEditIngredient('${itemName}', ${i})">+ Add Ingredient</button>
+                            <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                <button class="btn btn-primary btn-sm" onclick="saveEdit('${itemName}', ${i})">Save</button>
+                                <button class="btn btn-ghost btn-sm" onclick="cancelEdit('${itemName}', ${i})">Cancel</button>
+                            </div>
+                        </div>`;
+                }).join("");
+
+                card.innerHTML = `<div class="recipe-card-title">${itemName.replace(/_/g, " ")}</div>${variantsHTML}`;
+                list.appendChild(card);
+            }
+        }
+
+        function showEditForm(itemName, index) {
+            document.getElementById(`edit-form-${itemName}-${index}`).classList.remove("hidden");
+        }
+
+        function cancelEdit(itemName, index) {
+            document.getElementById(`edit-form-${itemName}-${index}`).classList.add("hidden");
+        }
+
+        function removeEditIngredient(btn) {
+            const list = btn.parentElement.parentElement;
+            if (list.querySelectorAll(".recipe-edit-row").length > 1) {
+                btn.parentElement.remove();
+            }
+        }
+
+        function addEditIngredient(itemName, index) {
+            const list = document.getElementById(`edit-ingredients-${itemName}-${index}`);
+            const row = document.createElement("div");
+            row.className = "recipe-edit-row";
+            row.innerHTML = `
+                <input type="text" name="edit-ingredient-name" value="">
+                <input type="number" name="edit-ingredient-amount" value="1">
+                <button class="btn btn-danger btn-sm" onclick="removeEditIngredient(this)">✕</button>`;
+            list.appendChild(row);
+        }
+
+        async function saveEdit(itemName, index) {
+            const output = parseInt(document.getElementById(`edit-output-${itemName}-${index}`).value);
+            const rows = document.querySelectorAll(`#edit-ingredients-${itemName}-${index} .recipe-edit-row`);
+            const ingredients = [];
+            rows.forEach(row => {
+                const name = row.querySelector("input[name='edit-ingredient-name']").value.trim();
+                const amount = parseInt(row.querySelector("input[name='edit-ingredient-amount']").value);
+                if (name) ingredients.push({ name, amount });
+            });
+
+            await fetch("/edit_recipe", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ item_name: itemName, variant_index: index, output, ingredients })
+            });
+
+            await loadRecipeEditor();
+        }
+
+        async function deleteRecipe(itemName, index) {
+            if (!confirm(`Delete this recipe variant for "${itemName.replace(/_/g, " ")}"?`)) return;
+
+            await fetch("/delete_recipe", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ item_name: itemName, variant_index: index })
+            });
+
+            await loadRecipeEditor();
         }
     </script>
 </body>
