@@ -58,5 +58,63 @@
         "oak_planks": 3
       }
     ]
+  },
+  "spruce_planks": {
+    "recipes": [
+      {
+        "output": 4,
+        "spruce_log": 1
+      }
+    ]
+  },
+  "dark_oak_planks": {
+    "recipes": [
+      {
+        "output": 4,
+        "dark_oak_log": 1
+      }
+    ]
+  },
+  "birch_planks": {
+    "recipes": [
+      {
+        "output": 4,
+        "birch_log": 1
+      }
+    ]
+  },
+  "jungle_planks": {
+    "recipes": [
+      {
+        "output": 4,
+        "jungle_log": 1
+      }
+    ]
+  },
+  "acacia_planks": {
+    "recipes": [
+      {
+        "output": 4,
+        "acacia_log": 1
+      }
+    ]
+  },
+  "oak_fence": {
+    "recipes": [
+      {
+        "output": 3,
+        "oak_planks": 4,
+        "stick": 2
+      }
+    ]
+  },
+  "oak_fence_gate": {
+    "recipes": [
+      {
+        "output": 1,
+        "oak_planks": 2,
+        "stick": 4
+      }
+    ]
   }
 }
